@@ -1,0 +1,16 @@
+rule,issue,action,records,effect on results
+R01,Several review rows per order,kept the latest review per order (by creation date),113 review rows,no orders lost
+R02,order_status casing inconsistent (e.g. DELIVERED),normalised to lowercase,783 rows,statuses comparable; feeds the usable-delivery test
+R03,payment_value recorded in centavos,converted to BRL,all orders,monetary features comparable with price/freight
+R04,review_score outside 1-5,set to missing,1031 rows,review features only; delivery label unaffected
+R05,Negative payment total,set to missing,924 rows,monetary averages only
+R06,Negative freight / price totals,set to missing,710 rows,monetary averages only
+R07,"Extreme item price (> R$10,000)","flagged, kept",409 orders,retained - may be genuine high-ticket orders
+R08,Invalid ZIP prefix (not 5 digits),set to missing,1960 orders (incl. already missing),location granularity reduced
+R09,City spelling / accents inconsistent,normalised + fuzzy-matched to IBGE municipality list,1062 unmatched (set to missing),state-level analysis unaffected
+R10,Illogical date sequence (e.g. delivered before approval),excluded from delay analysis,1046 orders,label would be meaningless
+R11,Order with no item rows,"kept, cannot receive a label",142 orders,remains unlabelled
+R12,"Duplicate (order_id, order_item_id) keys",aggregation uses nunique - counted once,0 rows,counts/totals still reconcile
+R13,Missing customer location,kept,1064 orders,excluded from state-level charts only
+R14,"Missing optional catalogue fields (dimensions, photos)",kept - never an exclusion reason,-,brief: a missing optional field does not make an order unusable
+R15,Same review_id on several rows,"kept - reviews are matched by order_id, dedup happens there",25 rows,no impact on the order-level view

@@ -1,0 +1,231 @@
+{
+  "loading": {
+    "db_size_mb": 24.4,
+    "table_rows": {
+      "orders": 20000,
+      "customers": 20000,
+      "order_items": 22662,
+      "order_payments": 20875,
+      "order_reviews": 19966,
+      "products": 11334,
+      "sellers": 2071,
+      "category_translation": 73
+    },
+    "duplicate_keys": {
+      "orders.order_id": 0,
+      "customers.customer_id": 0,
+      "products.product_id": 0,
+      "sellers.seller_id": 0,
+      "order_reviews.review_id": 25,
+      "order_items (order_id, order_item_id)": 0,
+      "order_payments (order_id, payment_sequential)": 0
+    },
+    "orphan_rows": {
+      "order_items -> orders": 0,
+      "order_payments -> orders": 0,
+      "order_reviews -> orders": 0,
+      "orders -> customers": 769,
+      "order_items -> products": 910,
+      "order_items -> sellers": 893
+    },
+    "review_dup_rows": 113,
+    "orders_matched_review": 19853,
+    "payment_total_diff": 0.0,
+    "items_price_diff": 0.0,
+    "items_freight_diff": -1.862645149230957e-09,
+    "item_rows": 22662,
+    "sum_item_count": 22662,
+    "orders_without_items": 142,
+    "customer_match_rate": 0.9187,
+    "memory_mb": {
+      "orders": 5.2,
+      "reviews": 5.6,
+      "payments": 3.4,
+      "items": 6.2,
+      "items+products+sellers": 13.8,
+      "assembled (1 row/order)": 20.3
+    }
+  },
+  "cleaning": {
+    "status_recased": 783,
+    "states_recased_trimmed": 18970,
+    "invalid_review_scores": 1031,
+    "negative_payments": 924,
+    "negative_freight": 368,
+    "negative_price": 342,
+    "price_outliers_flagged": 409,
+    "invalid_zip": 1960,
+    "city_unmatched": 1062,
+    "date_illogical_excluded": 1046,
+    "orders_without_item_rows": 142,
+    "missing_customer_location": 1064
+  },
+  "label": {
+    "analysis_set": 18954,
+    "labelled": 16262,
+    "late": 1105,
+    "on_time": 15157,
+    "unlabelled": 2692,
+    "exclusion_reasons": {
+      "status not delivered": 2045,
+      "missing delivery or estimated date": 1184,
+      "no item rows / unavailable": 143
+    }
+  },
+  "q1": {
+    "labelled": 16262,
+    "late": 1105,
+    "on_time": 15157,
+    "late_rate": 0.06794982167015128,
+    "median_late_days": 7.0,
+    "mean_late_days": 10.584615384615384,
+    "p90_late_days": 22.0,
+    "max_late_days": 188.0,
+    "share_over_7d": 0.4461538461538462
+  },
+  "q2": {
+    "buckets": [
+      {
+        "window": "1-7",
+        "late_rate": 0.16551724137931034,
+        "n": 290
+      },
+      {
+        "window": "8-14",
+        "late_rate": 0.04960835509138381,
+        "n": 1915
+      },
+      {
+        "window": "15-21",
+        "late_rate": 0.07097405775819873,
+        "n": 4086
+      },
+      {
+        "window": "22-28",
+        "late_rate": 0.07588652482269503,
+        "n": 5640
+      },
+      {
+        "window": "29-42",
+        "late_rate": 0.05861210948299696,
+        "n": 3617
+      },
+      {
+        "window": ">42",
+        "late_rate": 0.017412935323383085,
+        "n": 402
+      }
+    ],
+    "correlation": -0.03182694675835334,
+    "missing_approved": 312
+  },
+  "q3": {
+    "overall_late_rate": 0.06794982167015128,
+    "top_states": [
+      {
+        "customer_state": "RR",
+        "late_rate": 0.2222222222222222,
+        "n": 9,
+        "ci_low": 0.06322376231222723,
+        "ci_high": 0.5474166563271946
+      },
+      {
+        "customer_state": "CE",
+        "late_rate": 0.17582417582417584,
+        "n": 182,
+        "ci_low": 0.12738556469467535,
+        "ci_high": 0.2376651021097431
+      },
+      {
+        "customer_state": "MA",
+        "late_rate": 0.175,
+        "n": 120,
+        "ci_low": 0.11740448670592563,
+        "ci_high": 0.25275868948042857
+      },
+      {
+        "customer_state": "AL",
+        "late_rate": 0.17142857142857143,
+        "n": 70,
+        "ci_low": 0.10087625712010548,
+        "ci_high": 0.2761686606498236
+      },
+      {
+        "customer_state": "PE",
+        "late_rate": 0.15555555555555556,
+        "n": 225,
+        "ci_low": 0.11402435247359602,
+        "ci_high": 0.20865124497022539
+      },
+      {
+        "customer_state": "PI",
+        "late_rate": 0.1506849315068493,
+        "n": 73,
+        "ci_low": 0.08627588209726772,
+        "ci_high": 0.25002112369126345
+      },
+      {
+        "customer_state": "BA",
+        "late_rate": 0.12,
+        "n": 500,
+        "ci_low": 0.09437448030757052,
+        "ci_high": 0.15142022977591602
+      },
+      {
+        "customer_state": "PA",
+        "late_rate": 0.11764705882352941,
+        "n": 136,
+        "ci_low": 0.07372648505788335,
+        "ci_high": 0.18257493025773083
+      }
+    ],
+    "top5_base": [
+      "RR",
+      "CE",
+      "MA",
+      "AL",
+      "PE"
+    ],
+    "top5_v2": [
+      "RR",
+      "CE",
+      "MA",
+      "AL",
+      "PE"
+    ]
+  },
+  "sensitivity": {
+    "table": [
+      {
+        "definition": "Base (calendar-date comparison)",
+        "n labelled": 16262,
+        "late rate": 0.06794982167015128,
+        "delta vs base (pp)": 0.0
+      },
+      {
+        "definition": "V1: timestamp comparison (same-day PM counts late)",
+        "n labelled": 16262,
+        "late rate": 0.08203173041446317,
+        "delta vs base (pp)": 1.4081908744311895
+      },
+      {
+        "definition": "V2: include date-illogical orders",
+        "n labelled": 17273,
+        "late rate": 0.06408846176113009,
+        "delta vs base (pp)": -0.38613599090211864
+      },
+      {
+        "definition": "V3: usable = status + dates only",
+        "n labelled": 16262,
+        "late rate": 0.06794982167015128,
+        "delta vs base (pp)": 0.0
+      },
+      {
+        "definition": "V4: also require carrier handover date",
+        "n labelled": 15968,
+        "late rate": 0.06813627254509018,
+        "delta vs base (pp)": 0.018645087493890378
+      }
+    ]
+  }
+}

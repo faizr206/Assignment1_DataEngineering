@@ -1,0 +1,82 @@
+feature,kind,dtype,meaning,derivation,missing_policy
+item_count,numeric,float64,items in the basket,nunique order_item_id per order,NaN = no item rows (flagged by items_missing)
+unique_products,numeric,float64,distinct products in the basket,nunique product_id,NaN = no item rows
+unique_sellers,numeric,float64,distinct sellers in the basket,nunique seller_id,NaN = no item rows
+unique_categories,numeric,float64,distinct product categories,nunique product_category_name,NaN = no item rows
+total_price,numeric,float64,basket value in BRL,sum of item prices,NaN if all item prices missing
+avg_price,numeric,float64,mean item price in BRL,mean of item prices,NaN if all missing
+max_price,numeric,float64,most expensive item in BRL,max of item prices,NaN if all missing
+total_freight,numeric,float64,total freight in BRL,sum of freight_value,NaN if all missing; negatives removed in Section 2
+freight_ratio,numeric,float64,freight / (basket value + 1),derived,NaN if freight missing
+price_per_item,numeric,float64,basket value per item,total_price / item_count,NaN if no items
+total_weight_g,numeric,float64,total basket weight in grams,sum of product_weight_g,NaN = catalogue gap (flagged by weight_missing)
+avg_weight_g,numeric,float64,mean item weight in grams,mean of product_weight_g,NaN = catalogue gap
+volume_cm3,numeric,float64,mean item volume (L*H*W cm),product of mean dimensions,NaN if any dimension missing
+avg_description_length,numeric,float64,mean product description length (chars),mean of product_description_lenght,NaN = optional catalogue field
+avg_photos_qty,numeric,float64,mean product photo count,mean of product_photos_qty,NaN = optional catalogue field
+unique_seller_states,numeric,float64,number of states the sellers ship from,nunique seller_state,NaN = no item rows
+seller_customer_same_state,numeric,float64,1 if main seller state equals customer state,derived comparison,NaN if either state missing
+items_missing,binary flag,int64,1 if the order has no item rows,derived,never NaN
+weight_missing,binary flag,int64,1 if basket weight unknown,derived,never NaN
+promised_window_days,numeric,float64,calendar days from approval to estimated delivery,estimated date - approval (purchase fallback),NaN if both dates missing
+purchase_to_approval_hours,numeric,float64,hours from purchase to approval,approval - purchase timestamps,NaN if both missing
+approval_hour_sin,numeric,float64,approval_hour_sin,-,-
+approval_hour_cos,numeric,float64,approval_hour_cos,-,-
+approval_dow_sin,numeric,float64,approval_dow_sin,-,-
+approval_dow_cos,numeric,float64,approval_dow_cos,-,-
+approval_month_sin,numeric,float64,approval_month_sin,-,-
+approval_month_cos,numeric,float64,approval_month_cos,-,-
+approved_missing,binary flag,int64,1 if approval timestamp absent (purchase used instead),derived,never NaN
+customer_city_freq,frequency,float64,share of orders from the customer's normalised city,value_counts(normalize) mapping,NaN if city unmatched
+cust_state_AC,binary one-hot,int8,customer state = AC,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_AL,binary one-hot,int8,customer state = AL,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_AM,binary one-hot,int8,customer state = AM,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_AP,binary one-hot,int8,customer state = AP,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_BA,binary one-hot,int8,customer state = BA,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_CE,binary one-hot,int8,customer state = CE,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_DF,binary one-hot,int8,customer state = DF,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_ES,binary one-hot,int8,customer state = ES,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_GO,binary one-hot,int8,customer state = GO,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_MA,binary one-hot,int8,customer state = MA,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_MG,binary one-hot,int8,customer state = MG,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_MS,binary one-hot,int8,customer state = MS,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_MT,binary one-hot,int8,customer state = MT,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_PA,binary one-hot,int8,customer state = PA,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_PB,binary one-hot,int8,customer state = PB,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_PE,binary one-hot,int8,customer state = PE,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_PI,binary one-hot,int8,customer state = PI,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_PR,binary one-hot,int8,customer state = PR,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_RJ,binary one-hot,int8,customer state = RJ,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_RN,binary one-hot,int8,customer state = RN,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_RO,binary one-hot,int8,customer state = RO,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_RR,binary one-hot,int8,customer state = RR,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_RS,binary one-hot,int8,customer state = RS,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_SC,binary one-hot,int8,customer state = SC,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_SE,binary one-hot,int8,customer state = SE,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_SP,binary one-hot,int8,customer state = SP,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_TO,binary one-hot,int8,customer state = TO,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_ZZ,binary one-hot,int8,customer state = ZZ,one-hot of customer_state,cust_state_nan = 1 flags missing state
+cust_state_nan,binary one-hot,int8,customer state = nan,one-hot of customer_state,cust_state_nan = 1 flags missing state
+sell_state_AC,binary one-hot,int8,main seller state = AC,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_BA,binary one-hot,int8,main seller state = BA,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_CE,binary one-hot,int8,main seller state = CE,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_DF,binary one-hot,int8,main seller state = DF,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_ES,binary one-hot,int8,main seller state = ES,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_GO,binary one-hot,int8,main seller state = GO,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_MA,binary one-hot,int8,main seller state = MA,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_MG,binary one-hot,int8,main seller state = MG,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_MS,binary one-hot,int8,main seller state = MS,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_MT,binary one-hot,int8,main seller state = MT,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_PB,binary one-hot,int8,main seller state = PB,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_PE,binary one-hot,int8,main seller state = PE,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_PI,binary one-hot,int8,main seller state = PI,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_PR,binary one-hot,int8,main seller state = PR,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_RJ,binary one-hot,int8,main seller state = RJ,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_RN,binary one-hot,int8,main seller state = RN,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_RO,binary one-hot,int8,main seller state = RO,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_RS,binary one-hot,int8,main seller state = RS,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_SC,binary one-hot,int8,main seller state = SC,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_SE,binary one-hot,int8,main seller state = SE,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_SP,binary one-hot,int8,main seller state = SP,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_ZZ,binary one-hot,int8,main seller state = ZZ,one-hot of main_seller_state,sell_state_nan = 1 flags missing state
+sell_state_nan,binary one-hot,int8,main seller state = nan,one-hot of main_seller_state,sell_state_nan = 1 flags missing state

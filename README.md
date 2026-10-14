@@ -19,7 +19,7 @@ The original SQL file is never modified. Total runtime is about a minute;
 peak memory of the whole run stays well under 1 GB.
 
 **Requirements:** Python 3.10+ with `pandas`, `numpy`, `matplotlib`,
-`seaborn`, `xlrd`, `rapidfuzz`, and Jupyter/nbconvert
+`seaborn`, `xlrd`, `rapidfuzz`, `scikit-learn`, `shap`, and Jupyter/nbconvert
 (`pip install nbconvert` if missing). No database server — SQLite is built in.
 
 ## Manual steps (what the script automates)
@@ -38,7 +38,7 @@ peak memory of the whole run stays well under 1 GB.
 | 1. Loading the Data | `data/raw.sql` → `marketplace.sqlite` | `order_raw_df` in memory: one row per order (20,000 rows) | one order per row; children (items, payments, reviews) aggregated to order grain first; every merge asserted row-count- and totals-preserving |
 | 2. Data Quality and Cleaning | `order_raw_df` | `order_clean_df` (18,954 retained orders) + `outputs/cleaning_audit.csv` | retained orders have a logical date sequence; all 15 cleaning rules (R01–R15) are logged with records affected; nothing is dropped silently |
 | 3. Exploratory Analysis | `order_clean_df` | label `delivered_after_estimate` + `outputs/analysis_summary.json`, `outputs/chart_data/*.csv` | labelled subset = 16,262 usable completed deliveries; answers to the three business questions with sensitivity checks |
-| 4. Feature Engineering | `order_clean_df` + label | `outputs/features.csv`, `outputs/labels.csv`, `outputs/feature_dictionary.csv` | feature matrix: one row per retained order, approval-time information only; `order_id` is the join key (index), **not** a predictor. Load with `pd.read_csv("outputs/features.csv", index_col="order_id")` |
+| 4. Feature Engineering | `order_clean_df` + label | `outputs/features.csv`, `outputs/labels.csv`, `outputs/feature_dictionary.csv`, `outputs/shap_importance.csv`, `outputs/shap_beeswarm.png`, `outputs/shap_summary.json` | feature matrix: one row per retained order, approval-time information only; `order_id` is the join key (index), **not** a predictor. Load with `pd.read_csv("outputs/features.csv", index_col="order_id")`. The 4.7 SHAP sanity check trains a quick diagnostic model on the labelled subset and records which features carry signal |
 | 5. Reproducibility | all of the above | `outputs/resources.json`, `outputs/environment.txt`, `report.md`, this README | estimated vs measured resources per pipeline step; environment versions |
 
 ## Output files
@@ -48,6 +48,9 @@ peak memory of the whole run stays well under 1 GB.
 | `outputs/features.csv` | numerical feature table (18,954 × 81), index `order_id` |
 | `outputs/labels.csv` | `delivered_after_estimate` per order; `NaN` = unlabelled (cancelled / unknown / unreliable outcomes, per the brief) |
 | `outputs/feature_dictionary.csv` | meaning, dtype, derivation and missing-policy of every feature |
+| `outputs/shap_importance.csv` | 4.7 sanity check: mean \|SHAP\| per feature, ranked |
+| `outputs/shap_beeswarm.png` | 4.7 sanity check: SHAP beeswarm (top 15 features) |
+| `outputs/shap_summary.json` | 4.7 sanity check: model, CV ROC AUC, top-10 SHAP features |
 | `outputs/cleaning_audit.csv` | every cleaning rule (R01–R15), action, records affected, effect on results |
 | `outputs/analysis_summary.json` | machine-readable results: label stats, Q1–Q3 answers, sensitivity table |
 | `outputs/features_summary.json` | feature-table shape, dtypes, missing counts |

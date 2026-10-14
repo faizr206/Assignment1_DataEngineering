@@ -12,7 +12,8 @@ echo "==> 0/3 checking dependencies"
 python3 - <<'EOF'
 import sys
 missing = []
-for mod in ("pandas", "numpy", "matplotlib", "seaborn", "xlrd", "rapidfuzz"):
+for mod in ("pandas", "numpy", "matplotlib", "seaborn", "xlrd", "rapidfuzz",
+            "sklearn", "shap"):
     try:
         __import__(mod)
     except ImportError:
@@ -39,5 +40,6 @@ python3 -m jupyter nbconvert --to notebook --execute --inplace notebook.ipynb \
 echo "==> 3/3 done"
 echo "    outputs/  features.csv, labels.csv, feature_dictionary.csv,"
 echo "              cleaning_audit.csv, analysis_summary.json,"
-echo "              features_summary.json, resources.json, environment.txt,"
-echo "              chart_data/, and the executed notebook itself."
+echo "              features_summary.json, shap_importance.csv,"
+echo "              shap_summary.json, shap_beeswarm.png, resources.json,"
+echo "              environment.txt, chart_data/, and the executed notebook."

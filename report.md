@@ -234,6 +234,44 @@ visible; imputation is deliberately left to the modelling stage. `min_price` was
 redundant with average/max price; the full dictionary of all 81 features with meaning,
 derivation and missing policy is in `outputs/feature_dictionary.csv`.
 
+### 5.1 SHAP sanity check — the table carries real signal
+
+A feature table is only useful if it genuinely supports prediction, so Section 4.7 of the
+notebook runs a clearly-labelled **diagnostic** (not a deliverable model): a gradient-boosted
+classifier (`HistGradientBoostingClassifier`, which consumes `NaN` natively, so the table's
+deliberate missingness survives without imputation) is trained on exactly `features.csv` +
+`labels.csv`. Stratified 5-fold cross-validation scores **ROC AUC 0.744 ± 0.011** on the
+16,262 labelled orders — well above the 0.5 coin-flip for a 6.8 %-positive class, confirming
+the leakage-free table holds real pre-approval signal.
+
+**SHAP** (SHapley Additive exPlanations; `TreeExplainer` on a fixed 3,000-order sample)
+attributes every prediction to the features that produced it. The mean-|SHAP| ranking
+(`outputs/shap_importance.csv`, summary in `outputs/shap_summary.json`) is headed by:
+
+| rank | feature | mean \|SHAP\| | direction (beeswarm) |
+|---|---|---|---|
+| 1 | `approval_month_cos` | 0.346 | high (≈ Nov–Jan approvals) → more late |
+| 2 | `promised_window_days` | 0.203 | longer promised window → fewer late (matches Q2) |
+| 3 | `approval_month_sin` | 0.155 | high (≈ Feb–Apr approvals) → more late |
+| 4 | `cust_state_SP` | 0.144 | São Paulo customer → fewer late |
+| 5 | `total_freight` | 0.101 | higher freight → more late |
+| 6 | `purchase_to_approval_hours` | 0.067 | longer approval friction → more late |
+| 7 | `customer_city_freq` | 0.057 | metropolitan (frequent) city → fewer late |
+
+![SHAP beeswarm — impact of the top 15 features on late-delivery predictions](outputs/shap_beeswarm.png)
+
+**Reading.** Two story lines dominate. First, **seasonality**: the two cyclical month
+encodings act together as the strongest driver, and raw monthly late rates confirm the
+pattern they encode — risk peaks in March (15.7 %) and November (14.0 %) while June–July
+are safest (3.0 % / 4.3 %). Second, the **promised window**: the Q2 flagship is the strongest
+single non-seasonal feature, with long windows pushing predictions strongly toward on-time.
+Region follows (SP protective; RJ adverse, echoing Q3's regional concentration), then freight,
+approval friction and metropolitan proximity. The remaining 67 features each contribute small
+increments (bottom row of the beeswarm), so no single column dominates — the signal is
+distributed across the table rather than concentrated in one proxy, which is the healthy
+outcome this sanity check was looking for. As everywhere in this report, SHAP associations
+do not establish causation.
+
 ## 6. Reproducibility and resources
 
 `bash run_pipeline.sh` rebuilds the database from `data/raw.sql` and executes the notebook
@@ -267,7 +305,11 @@ the data itself. Saved storage totals:
 | `outputs/feature_dictionary.csv` | 9 kB |
 | `outputs/analysis_summary.json` | 6 kB |
 | `outputs/features_summary.json` | 4 kB |
+| `outputs/shap_beeswarm.png` | 187 kB |
+| `outputs/shap_importance.csv` | 2.5 kB |
+| `outputs/shap_summary.json` | 1.3 kB |
 | `outputs/chart_data/q3_state_late_rates.csv` | 2 kB |
+| `outputs/chart_data/shap_beeswarm.csv` | 478 kB |
 | `outputs/cleaning_audit.csv` | 2 kB |
 | `outputs/chart_data/q1_delay_histogram.csv` | 0 kB |
 | `outputs/chart_data/q2_window_late_rates.csv` | 0 kB |

@@ -1,0 +1,62 @@
+{
+  "purpose": "sanity check of the leakage-free feature table (not a deliverable model)",
+  "model": "HistGradientBoostingClassifier(max_iter=200, learning_rate=0.06, max_depth=6)",
+  "n_labelled_orders": 16262,
+  "late_rate": 0.0679,
+  "cv_roc_auc_mean": 0.744,
+  "cv_roc_auc_std": 0.0111,
+  "shap_sample_orders": 3000,
+  "runtime_s": 3.19,
+  "top10_features": [
+    {
+      "rank": 1,
+      "feature": "approval_month_cos",
+      "mean_abs_shap": 0.34575
+    },
+    {
+      "rank": 2,
+      "feature": "promised_window_days",
+      "mean_abs_shap": 0.20341
+    },
+    {
+      "rank": 3,
+      "feature": "approval_month_sin",
+      "mean_abs_shap": 0.15451
+    },
+    {
+      "rank": 4,
+      "feature": "cust_state_SP",
+      "mean_abs_shap": 0.14392
+    },
+    {
+      "rank": 5,
+      "feature": "total_freight",
+      "mean_abs_shap": 0.10108
+    },
+    {
+      "rank": 6,
+      "feature": "purchase_to_approval_hours",
+      "mean_abs_shap": 0.06675
+    },
+    {
+      "rank": 7,
+      "feature": "customer_city_freq",
+      "mean_abs_shap": 0.05742
+    },
+    {
+      "rank": 8,
+      "feature": "sell_state_SP",
+      "mean_abs_shap": 0.05125
+    },
+    {
+      "rank": 9,
+      "feature": "cust_state_RJ",
+      "mean_abs_shap": 0.04821
+    },
+    {
+      "rank": 10,
+      "feature": "avg_price",
+      "mean_abs_shap": 0.04726
+    }
+  ]
+}

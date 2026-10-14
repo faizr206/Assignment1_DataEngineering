@@ -1,0 +1,7 @@
+stage,orders
+orders_loaded,20000
+date_consistent_analysis_set,18954
+labelled,16262
+late,1105
+on_time_or_early,15157
+unlabelled,2692

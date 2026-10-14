@@ -61,7 +61,7 @@ Each table is read exactly once with a plain `SELECT *`; all aggregation happens
 order-grain frames. The alternative — pushing the `GROUP BY` work into SQL — would ship fewer
 rows out of the database, but the aggregates are needed as pandas frames for cleaning anyway,
 and the workload is small: the database is 24.4 MB on disk and all in-memory frames together
-occupy about 54 MB, so the simple approach costs seconds and a few tens of MB.
+occupy a few tens of MB (per-step measurements in Section 6), so the simple approach costs seconds and a few tens of MB.
 Section 5 compares a-priori estimates against measurements for every step; the estimates were
 within a factor of roughly two of the measurements, which is sufficient to confirm that no
 step is a resource risk at this scale.
@@ -105,7 +105,7 @@ field alone never makes an order unusable (R14). Negative monetary values are se
 rather than kept in averages, and extreme prices (e.g. R$55,000 for a single item) are flagged
 but retained, since high-ticket orders may be genuine. The single hard exclusion is logical:
 1,046 orders whose date sequences are contradictory are removed from the *delay analysis*
-(`order_clean_df`, 18,954 retained orders), because any delay computed from them would be
+(`order_clean_df`, saved as `outputs/orders_clean.csv`, 18,954 retained orders; labels kept separate in `outputs/labels.csv`), because any delay computed from them would be
 meaningless. Everything else stays in the table.
 
 ### 3.3 The delivery label
@@ -281,39 +281,39 @@ instructions. Environment versions are pinned in `outputs/environment.txt`.
 
 Estimated versus measured resources per pipeline step (estimates made a priori from row
 counts and column types; measurement scope: runtime over the whole step, memory as peak
-Python allocations inside the step, session RSS covers the whole kernel):
+Python allocations inside the step, storage as the intermediate frame the step keeps in
+memory plus the files it writes — the pipeline uses no scratch files, and session RSS
+covers the whole kernel):
 
-| step | est. runtime | measured | est. memory | measured peak |
-|---|---|---|---|---|
-| | load orders (20k x 8 text cols) | 0.3 s | 0.06 s | 6 MB | 14.6 MB |
-| load + dedup reviews (20k rows) | 0.6 s | 0.12 s | 8 MB | 12.6 MB |
-| load + aggregate payments (21k rows) | 0.4 s | 0.06 s | 4 MB | 8.1 MB |
-| load + aggregate items (23k rows, 2 joins) | 1.2 s | 0.14 s | 18 MB | 20.4 MB |
-| assemble one row per order (3 left joins on 20k) | 0.5 s | 0.08 s | 16 MB | 19.5 MB |
-| build feature table (19k x ~90) | 0.3 s | 0.00 s | 10 MB | 2.7 MB | |
+| step | est. runtime | measured | est. memory | peak | est. storage | held | saved |
+|---|---|---|---|---|---|---|---|
+| load orders (20k x 8 text cols) | 0.3 s | 0.06 s | 6 MB | 14.6 MB | 6 MB | 11.1 MB | 0.0 MB |
+| load + dedup reviews (20k rows) | 0.6 s | 0.12 s | 8 MB | 12.6 MB | 8 MB | 5.7 MB | 0.0 MB |
+| load + aggregate payments (21k rows) | 0.4 s | 0.05 s | 4 MB | 8.1 MB | 4 MB | 2.3 MB | 0.0 MB |
+| load + aggregate items (23k rows, 2 joins) | 1.2 s | 0.14 s | 18 MB | 20.4 MB | 18 MB | 2.2 MB | 0.0 MB |
+| assemble one row per order (3 left joins on 20k) | 0.5 s | 0.08 s | 16 MB | 19.5 MB | 30 MB | 16.4 MB | 0.0 MB |
+| build feature table + save (19k x ~90) | 0.3 s | 0.00 s | 10 MB | 2.7 MB | 11 MB | 1.7 MB | 8.1 MB |
 
 Runtime estimates were conservative by roughly an order of magnitude — every step completes
-in well under a second — and memory estimates were accurate within a factor of two. Whole-
-session peak RSS was 540 MB, dominated by the interpreter and libraries rather than
-the data itself. Saved storage totals:
+in well under a second — and the memory and storage estimates are accurate to within a
+factor of a few. Whole-session peak RSS was 700 MB, dominated by the interpreter and
+libraries rather than the data itself. Saved storage totals:
 
 | file | size |
 |---|---|
-| | `marketplace.sqlite` | 24.4 MB |
+| `marketplace.sqlite` | 24.4 MB |
+| `outputs/orders_clean.csv` | 10.0 MB |
 | `outputs/features.csv` | 7.4 MB |
 | `outputs/labels.csv` | 0.7 MB |
 | `outputs/feature_dictionary.csv` | 9 kB |
 | `outputs/analysis_summary.json` | 6 kB |
 | `outputs/features_summary.json` | 4 kB |
-| `outputs/shap_beeswarm.png` | 187 kB |
-| `outputs/shap_importance.csv` | 2.5 kB |
-| `outputs/shap_summary.json` | 1.3 kB |
-| `outputs/chart_data/q3_state_late_rates.csv` | 2 kB |
-| `outputs/chart_data/shap_beeswarm.csv` | 478 kB |
+| `outputs/chart_data/` (5 CSVs, incl. the label-flow data) | 480 kB |
+| `outputs/shap_beeswarm.png` | 192 kB |
+| `outputs/shap_importance.csv` + `shap_summary.json` | 4 kB |
 | `outputs/cleaning_audit.csv` | 2 kB |
-| `outputs/chart_data/q1_delay_histogram.csv` | 0 kB |
-| `outputs/chart_data/q2_window_late_rates.csv` | 0 kB |
-| `outputs/environment.txt` | 0 kB | |
+| `outputs/resources.json` + `environment.txt` | 2 kB |
+| **total** | **≈ 43.2 MB** |
 
 The resource picture confirms the Section 2 judgement: at 20k orders the pipeline is trivial
 in absolute terms, so clarity and auditability were optimised over micro-efficiency, while

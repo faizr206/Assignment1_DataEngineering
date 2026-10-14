@@ -36,7 +36,7 @@ peak memory of the whole run stays well under 1 GB.
 | step (notebook section) | inputs | outputs | row meaning / how to load |
 |---|---|---|---|
 | 1. Loading the Data | `data/raw.sql` → `marketplace.sqlite` | `order_raw_df` in memory: one row per order (20,000 rows) | one order per row; children (items, payments, reviews) aggregated to order grain first; every merge asserted row-count- and totals-preserving |
-| 2. Data Quality and Cleaning | `order_raw_df` | `order_clean_df` (18,954 retained orders) + `outputs/cleaning_audit.csv` | retained orders have a logical date sequence; all 15 cleaning rules (R01–R15) are logged with records affected; nothing is dropped silently |
+| 2. Data Quality and Cleaning | `order_raw_df` | `order_clean_df` → `outputs/orders_clean.csv` (18,954 retained orders) + `outputs/cleaning_audit.csv` | cleaned order records, one row per retained order; all 15 cleaning rules (R01–R15) are logged with records affected; nothing is dropped silently. The delivery label is delivered separately in `outputs/labels.csv` |
 | 3. Exploratory Analysis | `order_clean_df` | label `delivered_after_estimate` + `outputs/analysis_summary.json`, `outputs/chart_data/*.csv` | labelled subset = 16,262 usable completed deliveries; answers to the three business questions with sensitivity checks |
 | 4. Feature Engineering | `order_clean_df` + label | `outputs/features.csv`, `outputs/labels.csv`, `outputs/feature_dictionary.csv`, `outputs/shap_importance.csv`, `outputs/shap_beeswarm.png`, `outputs/shap_summary.json` | feature matrix: one row per retained order, approval-time information only; `order_id` is the join key (index), **not** a predictor. Load with `pd.read_csv("outputs/features.csv", index_col="order_id")`. The 4.7 SHAP sanity check trains a quick diagnostic model on the labelled subset and records which features carry signal |
 | 5. Reproducibility | all of the above | `outputs/resources.json`, `outputs/environment.txt`, `report.md`, this README | estimated vs measured resources per pipeline step; environment versions |
@@ -46,6 +46,7 @@ peak memory of the whole run stays well under 1 GB.
 | file | contents |
 |---|---|
 | `outputs/features.csv` | numerical feature table (18,954 × 81), index `order_id` |
+| `outputs/orders_clean.csv` | cleaned order records (18,954 × 53), one row per retained order, with all cleaning rules applied; label not included — join `outputs/labels.csv` on `order_id` |
 | `outputs/labels.csv` | `delivered_after_estimate` per order; `NaN` = unlabelled (cancelled / unknown / unreliable outcomes, per the brief) |
 | `outputs/feature_dictionary.csv` | meaning, dtype, derivation and missing-policy of every feature |
 | `outputs/shap_importance.csv` | 4.7 sanity check: mean \|SHAP\| per feature, ranked |

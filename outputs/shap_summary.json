@@ -6,7 +6,7 @@
   "cv_roc_auc_mean": 0.744,
   "cv_roc_auc_std": 0.0111,
   "shap_sample_orders": 3000,
-  "runtime_s": 2.78,
+  "runtime_s": 2.31,
   "top10_features": [
     {
       "rank": 1,

@@ -3,7 +3,7 @@
     {
       "step": "load orders (20k x 8 text cols)",
       "estimated_runtime_s": 0.3,
-      "measured_runtime_s": 0.057,
+      "measured_runtime_s": 0.061,
       "estimated_mem_mb": 6.0,
       "measured_peak_alloc_mb": 14.6,
       "estimated_storage_mb": 6.0,
@@ -13,7 +13,7 @@
     {
       "step": "load + dedup reviews (20k rows)",
       "estimated_runtime_s": 0.6,
-      "measured_runtime_s": 0.116,
+      "measured_runtime_s": 0.123,
       "estimated_mem_mb": 8.0,
       "measured_peak_alloc_mb": 12.6,
       "estimated_storage_mb": 8.0,
@@ -23,7 +23,7 @@
     {
       "step": "load + aggregate payments (21k rows)",
       "estimated_runtime_s": 0.4,
-      "measured_runtime_s": 0.051,
+      "measured_runtime_s": 0.055,
       "estimated_mem_mb": 4.0,
       "measured_peak_alloc_mb": 8.1,
       "estimated_storage_mb": 4.0,
@@ -33,7 +33,7 @@
     {
       "step": "load + aggregate items (23k rows, 2 joins)",
       "estimated_runtime_s": 1.2,
-      "measured_runtime_s": 0.14,
+      "measured_runtime_s": 0.15,
       "estimated_mem_mb": 18.0,
       "measured_peak_alloc_mb": 20.4,
       "estimated_storage_mb": 18.0,
@@ -43,7 +43,7 @@
     {
       "step": "assemble one row per order (3 left joins on 20k)",
       "estimated_runtime_s": 0.5,
-      "measured_runtime_s": 0.079,
+      "measured_runtime_s": 0.084,
       "estimated_mem_mb": 16.0,
       "measured_peak_alloc_mb": 19.5,
       "estimated_storage_mb": 30.0,
@@ -61,7 +61,7 @@
       "measured_saved_mb": 8.14
     }
   ],
-  "session_peak_rss_mb": 699.9,
+  "session_peak_rss_mb": 936.8,
   "session_peak_rss_scope": "whole notebook kernel process (getrusage ru_maxrss)",
   "storage_mb": {
     "marketplace.sqlite": 24.4,
@@ -78,7 +78,8 @@
     "outputs/features_summary.json": 0.004,
     "outputs/labels.csv": 0.693,
     "outputs/orders_clean.csv": 10.004,
-    "outputs/shap_beeswarm.png": 0.192,
+    "outputs/resources.json": 0.003,
+    "outputs/shap_beeswarm.png": 0.191,
     "outputs/shap_importance.csv": 0.003,
     "outputs/shap_summary.json": 0.001
   }
